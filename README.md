@@ -1,1 +1,1 @@
-# beer-mobile-react
+# beer-mobile-pwa
