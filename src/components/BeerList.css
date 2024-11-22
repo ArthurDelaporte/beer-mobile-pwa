@@ -1,4 +1,3 @@
-/* BeerList.css */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -7,37 +6,94 @@ body {
     color: #333;
 }
 
-h1 {
+.beer-list {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.title {
     text-align: center;
-    margin-top: 20px;
     font-size: 2rem;
+    margin-bottom: 20px;
     color: #2c3e50;
 }
 
-ul {
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
     list-style: none;
     padding: 0;
-    margin: 20px auto;
-    max-width: 600px;
+    margin: 0;
 }
 
-li {
+.beer-card {
     background: #fff;
-    margin: 10px 0;
-    padding: 15px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    padding: 20px;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
 }
 
-li strong {
-    font-size: 1.1rem;
-    color: #2c3e50;
+.beer-image {
+    height: 150px;
+    width: auto;
+    border-radius: 8px;
+    margin-bottom: 10px;
 }
 
-li span {
+.beer-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+}
+
+.beer-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+.beer-tagline {
     font-size: 0.9rem;
-    color: #7f8c8d;
+    color: #555;
+    margin: 0;
+}
+
+.beer-style {
+    font-size: 0.9rem;
+    color: #333;
+    font-weight: bold;
+    margin: 0;
+}
+
+.beer-attributes {
+    font-size: 0.9rem;
+    color: #888;
+    margin: 0;
+}
+
+@media (max-width: 1024px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .beer-image {
+        height: 130px;
+    }
+}
+
+@media (max-width: 768px) {
+    .grid {
+        grid-template-columns: repeat(1, 1fr);
+    }
+
+    .beer-image {
+        height: 100px;
+    }
 }
