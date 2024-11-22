@@ -209,7 +209,7 @@ const BeerList = () => {
                             setMaxAbv('');
                         }}
                     >
-                        Reset
+                        Réinitialiser
                     </button>
                 </div>
             )}
