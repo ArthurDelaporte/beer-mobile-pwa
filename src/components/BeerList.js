@@ -15,10 +15,11 @@ const BeerList = () => {
             .then((csvData) => {
                 Papa.parse(csvData, {
                     header: true,
+                    delimiter: ';', 
                     skipEmptyLines: true,
                     complete: (result) => {
                         const validBeers = result.data.filter(
-                            (beer) => beer.name && beer.abv
+                            (beer) => beer.beer && beer.abv 
                         );
                         setBeers(validBeers);
                         setFilteredBeers(validBeers);
@@ -26,13 +27,13 @@ const BeerList = () => {
                 });
             });
     }, []);
-
+    
     useEffect(() => {
         let updatedBeers = beers;
 
         if (searchQuery) {
             updatedBeers = updatedBeers.filter((beer) =>
-                beer.name.toLowerCase().includes(searchQuery.toLowerCase())
+                beer.beer.toLowerCase().includes(searchQuery.toLowerCase())
             );
         }
 
@@ -48,19 +49,28 @@ const BeerList = () => {
     }, [searchQuery, filterStyle, sortOrder, beers]);
 
     const sortBeers = (beersToSort, order) => {
-        const [key, direction] = order.split('-');
-        return beersToSort.sort((a, b) => {
-            if (!a[key] || !b[key]) return 0; 
-            if (key === 'name') {
+        const [key, direction] = order.split('-');    
+        const sortKey = key === 'name' ? 'beer' : key;
+    
+        return [...beersToSort].sort((a, b) => {
+            if (!a[sortKey] || !b[sortKey]) return 0;
+    
+            if (sortKey === 'beer') {
+
                 return direction === 'asc'
-                    ? a[key].localeCompare(b[key])
-                    : b[key].localeCompare(a[key]);
-            } else if (key === 'abv') {
-                return direction === 'asc' ? a[key] - b[key] : b[key] - a[key];
+                    ? a.beer.localeCompare(b.beer)
+                    : b.beer.localeCompare(a.beer);
+            } else if (sortKey === 'abv') {
+
+                return direction === 'asc'
+                    ? parseFloat(a.abv) - parseFloat(b.abv)
+                    : parseFloat(b.abv) - parseFloat(a.abv);
             }
             return 0;
         });
     };
+    
+
 
     return (
         <div>
@@ -99,7 +109,7 @@ const BeerList = () => {
                 {filteredBeers.map((beer, index) => (
                     <li key={index}>
                         <div>
-                            <strong>{beer.name || 'Nom inconnu'}</strong>
+                            <strong>{beer.beer || 'Nom inconnu'}</strong>
                             <span>{beer.style || 'Style inconnu'}</span>
                         </div>
                         <div>{beer.abv ? `${beer.abv}% ABV` : 'ABV non renseigné'}</div>
