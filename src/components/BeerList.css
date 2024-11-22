@@ -1,3 +1,4 @@
+/* BeerList.css */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -19,6 +20,42 @@ body {
     color: #2c3e50;
 }
 
+/* Champ de recherche */
+input[type="text"] {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px 15px;
+    margin: 10px 0 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus {
+    border-color: #2c3e50;
+    outline: none;
+}
+
+/* Liste de styles et de tri */
+select {
+    padding: 10px 15px;
+    margin: 10px 10px 20px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: #fff;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+select:focus {
+    border-color: #2c3e50;
+    outline: none;
+}
+
+/* Grid pour les cartes de bière */
 .grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -78,6 +115,7 @@ body {
     margin: 0;
 }
 
+/* Responsiveness pour les différentes tailles d'écran */
 @media (max-width: 1024px) {
     .grid {
         grid-template-columns: repeat(2, 1fr);
