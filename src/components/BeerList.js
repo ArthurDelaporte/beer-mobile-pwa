@@ -19,7 +19,7 @@ const BeerList = () => {
                     skipEmptyLines: true,
                     complete: (result) => {
                         const validBeers = result.data.filter(
-                            (beer) => beer.beer && beer.abv 
+                            (beer) => beer.name && beer.abv 
                         );
                         setBeers(validBeers);
                         setFilteredBeers(validBeers);
@@ -32,11 +32,25 @@ const BeerList = () => {
         let updatedBeers = beers;
 
         if (searchQuery) {
-            updatedBeers = updatedBeers.filter((beer) =>
-                beer.beer.toLowerCase().includes(searchQuery.toLowerCase())
-            );
+            // Si la recherche contient un nombre entier (prix ou quantité)
+            const searchNumber = searchQuery.trim();
+
+            if (!isNaN(searchNumber)) {
+                // Recherche par prix ou taille (sous forme de chaîne)
+                updatedBeers = updatedBeers.filter((beer) =>
+                    (beer.price && beer.price.includes(searchNumber)) || 
+                    (beer.size && beer.size.includes(searchNumber))
+                );
+            } else {
+                // Recherche par nom ou style
+                updatedBeers = updatedBeers.filter((beer) =>
+                    beer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    (beer.style && beer.style.toLowerCase().includes(searchQuery.toLowerCase()))
+                );
+            }
         }
 
+        // Filtrer par style
         if (filterStyle) {
             updatedBeers = updatedBeers.filter((beer) =>
                 beer.style && beer.style.toLowerCase().includes(filterStyle.toLowerCase())
@@ -50,35 +64,39 @@ const BeerList = () => {
 
     const sortBeers = (beersToSort, order) => {
         const [key, direction] = order.split('-');    
-        const sortKey = key === 'name' ? 'beer' : key;
+        const sortKey = key === 'name' ? 'name' : key;
     
         return [...beersToSort].sort((a, b) => {
             if (!a[sortKey] || !b[sortKey]) return 0;
     
-            if (sortKey === 'beer') {
-
+            if (sortKey === 'name') {
                 return direction === 'asc'
-                    ? a.beer.localeCompare(b.beer)
-                    : b.beer.localeCompare(a.beer);
+                    ? a.name.localeCompare(b.name)
+                    : b.name.localeCompare(a.name);
             } else if (sortKey === 'abv') {
-
                 return direction === 'asc'
                     ? parseFloat(a.abv) - parseFloat(b.abv)
                     : parseFloat(b.abv) - parseFloat(a.abv);
+            } else if (sortKey === 'price') {
+                return direction === 'asc'
+                    ? parseFloat(a.price) - parseFloat(b.price)
+                    : parseFloat(b.price) - parseFloat(a.price);
+            } else if (sortKey === 'size') {
+                const sizeA = parseInt(a.size) || 0;
+                const sizeB = parseInt(b.size) || 0;
+                return direction === 'asc' ? sizeA - sizeB : sizeB - sizeA;
             }
             return 0;
         });
     };
-    
-
 
     return (
-        <div>
-            <h1>Liste des Bières</h1>
+        <div className="beer-list">
+            <h1 className="title">Liste des Bières</h1>
 
             <input
                 type="text"
-                placeholder="Rechercher une bière..."
+                placeholder="Rechercher une bière, prix ou quantité..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -103,16 +121,28 @@ const BeerList = () => {
                 <option value="name-desc">Nom (Z-A)</option>
                 <option value="abv-asc">Alcool (%) - Croissant</option>
                 <option value="abv-desc">Alcool (%) - Décroissant</option>
+                <option value="price-asc">Prix (€) - Croissant</option>
+                <option value="price-desc">Prix (€) - Décroissant</option>
+                <option value="size-asc">Quantité (ml) - Croissant</option>
+                <option value="size-desc">Quantité (ml) - Décroissant</option>
             </select>
 
-            <ul>
+            <ul className="grid">
                 {filteredBeers.map((beer, index) => (
-                    <li key={index}>
-                        <div>
-                            <strong>{beer.beer || 'Nom inconnu'}</strong>
-                            <span>{beer.style || 'Style inconnu'}</span>
+                    <li key={index} className="beer-card">
+                         <img
+                            src={'/img/beers/' + beer.image_url}
+                            alt={beer.name}
+                            className="beer-image"
+                        />
+                        <div className="beer-info">
+                            <h2 className="beer-name">{beer.name}</h2>
+                            <p className="beer-tagline">{beer.tagline}</p>
+                            <p className="beer-style">{beer.style}</p>
+                            <p className="beer-attributes">
+                                {beer.size} • {beer.price}€ • {beer.abv}%
+                            </p>
                         </div>
-                        <div>{beer.abv ? `${beer.abv}% ABV` : 'ABV non renseigné'}</div>
                     </li>
                 ))}
             </ul>
